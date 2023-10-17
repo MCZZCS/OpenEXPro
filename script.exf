@@ -1,0 +1,49 @@
+include "system";
+include "array";
+
+value a = [14,13,16,2,5,8,4,8,5,7,3,6,5,3,6,5,4];
+
+function ar(arr) {
+    value len = array.length(arr);
+    value temp;
+    value i = 0;
+    value j = 0;
+    while(i < len - 1) {
+        while(j < len - 1 - i) {
+            if (arr[j] > arr[j+1]) {
+                temp = arr[j+1];
+                arr[j+1] = arr[j];
+                arr[j] = temp;
+            }
+            j = j + 1;
+        }
+        j = 0;
+        i = i + 1;
+    }
+    return arr;
+}
+
+function se(ary){
+    value length = array.length(ary);
+    value minIndex;
+    value tmp;
+    value ii = 0;
+    value jj = 0;
+    while (ii < length - 1) {
+       minIndex = ii;
+       jj = ii + 1;
+       while (jj < length) {
+           if (ary[jj] < ary[minIndex]) {     // 寻找最小的数
+               minIndex = jj;                 // 将最小数的索引保存
+           }
+           jj = jj + 1;
+       }
+       tmp = ary[ii];
+       ary[ii] = ary[minIndex];
+       ary[minIndex] = tmp;
+       ii = ii + 1;
+    }
+    return ary;
+}
+
+value ii;
