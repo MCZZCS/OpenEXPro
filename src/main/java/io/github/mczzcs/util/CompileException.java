@@ -9,7 +9,7 @@ public class CompileException extends RuntimeException{
     Token token;
     String filename;
     String message;
-    int status = 0;
+    int status;
 
     public CompileException(String message,String filename){
         this.message = message;
@@ -30,12 +30,12 @@ public class CompileException extends RuntimeException{
                     "\n\tToken: " + token.getData() +
                     "\n\tLine: " + token.getLine() +
                     "\n\tFilename: " + filename +
-                    "\n\tCompile: " + Main.compile_version +
-                    "\n\tRuntime: " + Main.runtime_version);
+                    "\n\tEdition: " + Main.name+
+                    "\n\tVersion: " + Main.version);
         } else if (status == 2) {
             s.println("Compile Error: " + message +
-                    "\n\tCompile: " + Main.compile_version +
-                    "\n\tRuntime: " + Main.runtime_version);
+                    "\n\tEdition: " + Main.name +
+                    "\n\tVersion: " + Main.version);
         }
 
         s.println("Cause by Thread/"+Thread.currentThread().getName()+" CompileException");

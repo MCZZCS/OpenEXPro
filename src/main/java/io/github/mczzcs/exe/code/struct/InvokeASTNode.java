@@ -62,6 +62,6 @@ public class InvokeASTNode extends StructNode {
             return;
         }
 
-        throw new VMRuntimeException("找不到指定方法:" + function, executor.getThread());
+        throw new VMRuntimeException("No such function:" +lib+"."+ function, executor.getThread());
     }
 }

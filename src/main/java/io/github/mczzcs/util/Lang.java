@@ -24,6 +24,11 @@ public class Lang {
      * outside.loop.back Back outside loop
      */
 
+    /*
+     * no.such.function No such function
+     *
+     */
+
     public static String buildSubCommand(String command,String args,String message){
         StringBuilder sb = new StringBuilder();
         int index = 4 + command.length() + args.length();

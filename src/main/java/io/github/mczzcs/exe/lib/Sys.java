@@ -1,11 +1,9 @@
 package io.github.mczzcs.exe.lib;
 
+import io.github.mczzcs.ConsoleModel;
 import io.github.mczzcs.Main;
 import io.github.mczzcs.exe.core.Executor;
-import io.github.mczzcs.exe.obj.ExDouble;
-import io.github.mczzcs.exe.obj.ExNull;
-import io.github.mczzcs.exe.obj.ExObject;
-import io.github.mczzcs.exe.obj.ExString;
+import io.github.mczzcs.exe.obj.*;
 import io.github.mczzcs.exe.thread.ThreadManager;
 import io.github.mczzcs.exe.thread.ThreadTask;
 import io.github.mczzcs.util.VMRuntimeException;
@@ -21,8 +19,7 @@ public class Sys implements RuntimeLibrary{
         rfs.add(new Memory());
         rfs.add(new Input());
         rfs.add(new Thread());
-        rfs.add(new CompilerVersion());
-        rfs.add(new RuntimeVersion());
+        rfs.add(new SysInfo());
         rfs.add(new Stop());
         rfs.add(new Sleep());
     }
@@ -161,7 +158,7 @@ public class Sys implements RuntimeLibrary{
                     if(f.getName().equals(func.getData())) function = f;
                 }
             }
-            if(function == null)throw new VMRuntimeException("找不到指定函数:"+func.getData(),executor.getThread());
+            if(function == null)throw new VMRuntimeException("Not found function:"+func.getData(),executor.getThread());
             task.setFunction(function);
             task.start();
             ThreadManager.addThread(task);
@@ -173,38 +170,32 @@ public class Sys implements RuntimeLibrary{
             return "thread";
         }
     }
-    private static class CompilerVersion implements RuntimeFunction{
+
+    private static class SysInfo implements RuntimeFunction{
 
         @Override
         public int getVarNum() {
-            return 0;
+            return 1;
         }
 
         @Override
         public ExObject invoke(ArrayList<ExObject> vars, Executor executor) throws VMRuntimeException {
-            return new ExString(Main.compile_version);
+            ExObject object = vars.get(0);
+
+            if(object.getType() == ExObject.ARRAY) throw new VMRuntimeException("Illegal argument: Cannot pass in a parameter of type ARRAY.",executor.getThread());
+
+            return switch (object.getData()) {
+                case "os" -> new ExString(System.getProperty("os.name"));
+                case "version" -> new ExString(Main.version);
+                case "svm" -> new ExBool(ConsoleModel.isStamonVM);
+                case "edition" -> new ExString(Main.name);
+                default -> new ExNull();
+            };
         }
 
         @Override
         public java.lang.String getName() {
-            return "compiler_version";
-        }
-    }
-    private static class RuntimeVersion implements RuntimeFunction{
-
-        @Override
-        public int getVarNum() {
-            return 0;
-        }
-
-        @Override
-        public ExObject invoke(ArrayList<ExObject> vars, Executor executor) throws VMRuntimeException {
-            return new ExString(Main.runtime_version);
-        }
-
-        @Override
-        public java.lang.String getName() {
-            return "runtime_version";
+            return "sysinfo";
         }
     }
 }

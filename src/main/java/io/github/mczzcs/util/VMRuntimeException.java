@@ -9,6 +9,7 @@ public class VMRuntimeException extends Exception{
         ConsoleModel.getOutput().error("ScriptRuntimeError:"+message+"\n\t" +
                 "ThreadName:"+task.getName()+"\n\t" +
                 "FileName:"+task.getFilename()+"\n\t" +
-                "RuntimeVersion:"+ Main.runtime_version);
+                "Edition: " +Main.name + "\n\t" +
+                "Version: "+ Main.version);
     }
 }

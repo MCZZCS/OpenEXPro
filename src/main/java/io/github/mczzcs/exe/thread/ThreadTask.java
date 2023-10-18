@@ -26,9 +26,9 @@ public class ThreadTask {
                 e.printStackTrace();
             }catch (EmptyStackException e){
                 status = ThreadManager.Status.ERROR;
-                System.err.println("Error: 堆栈处理错误-在线程["+executor.getThread().name+"]里\n\t" +
+                System.err.println("RuntimeError: OpStackError-Cause by ["+executor.getThread().name+"] thread\n\t" +
                         "Filename: " +executor.getExecuting().getFilename()+"\n\t"+
-                        "Version:"+ Main.runtime_version);
+                        "Version:"+ Main.name + Main.version);
                 e.printStackTrace();
             }
         });
