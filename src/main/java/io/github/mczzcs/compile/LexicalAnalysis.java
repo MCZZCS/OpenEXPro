@@ -17,7 +17,9 @@ public class LexicalAnalysis {
         StringBuilder sb = new StringBuilder();
         for (String s : data) {
             if (s.contains("//")) {
-                sb.append(s.split("//")[0]).append("\n");
+                try {
+                    sb.append(s.split("//")[0]).append("\n");
+                }catch (ArrayIndexOutOfBoundsException ignored){}
             } else sb.append(s).append("\n");
         }
         arrays = sb.toString().toCharArray();

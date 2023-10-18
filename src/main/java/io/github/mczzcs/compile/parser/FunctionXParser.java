@@ -53,6 +53,7 @@ public class FunctionXParser {
                 }
                 case "if" -> {
                     ArrayList<Token> vars = new ArrayList<>(), groups = new ArrayList<>(), else_g = new ArrayList<>();
+                    ArrayList<ElseIfParser> elseIfParsers = new ArrayList<>();
                     Token t = getToken();
 
                     if (!(t.getType() == Token.LP && t.getData().equals("(")))
@@ -94,7 +95,7 @@ public class FunctionXParser {
                     try {
                         t = getToken();
                     } catch (EOFException e11) {
-                        return new IfParser(e.calculate(e.transitSuffix(func_parser)), new Parser.SubParser(groups, parser, compiler,true,false,func_parser).getParsers(), new ArrayList<>());
+                        return new IfParser(e.calculate(e.transitSuffix(func_parser)), new Parser.SubParser(groups, parser, compiler,true,false,func_parser).getParsers(),elseIfParsers, new ArrayList<>());
                     }
                     int j = 1;
                     if (t.getType() == Token.KEY && t.getData().equals("else")) {
@@ -108,9 +109,39 @@ public class FunctionXParser {
                             if (j == 0) break;
                             else_g.add(t);
                         } while (true);
+                    } else if(t.getType() == Token.KEY && t.getData().equals("elif")){
+                        ElseIfParser eparser;
+                        boolean isFirst = true;
+                        while (true){
+                            if(!isFirst){
+                                t = getToken();
+                                if (t.getType() == Token.KEY && t.getData().equals("else")) {
+                                    t = getToken();
+                                    if (!(t.getType() == Token.LP && t.getData().equals("{")))
+                                        throw new CompileException("Missing statement body.", t, parser.filename);
+                                    do {
+                                        t = getToken();
+                                        if (t.getType() == Token.LP && t.getData().equals("{")) j += 1;
+                                        if (t.getType() == Token.LR && t.getData().equals("}")) j -= 1;
+                                        if (j == 0) break;
+                                        else_g.add(t);
+                                    } while (true);
+                                    break;
+                                }else if(t.getType() == Token.KEY && t.getData().equals("elif")){
+
+                                }else {
+                                    buffer = t;
+                                    break;
+                                }
+                            }
+                            isFirst = false;
+                            eparser = getElseIf(compiler,parser,func_parser);
+                            if(eparser == null)break;
+                            elseIfParsers.add(eparser);
+                        }
                     } else buffer = t;
 
-                    return new IfParser(e.calculate(e.transitSuffix(func_parser)), new Parser.SubParser(groups, parser, compiler,true,false,func_parser).getParsers(), new Parser.SubParser(else_g, parser, compiler,true,false,func_parser).getParsers());
+                    return new IfParser(e.calculate(e.transitSuffix(func_parser)), new Parser.SubParser(groups, parser, compiler,true,false,func_parser).getParsers(), elseIfParsers,new Parser.SubParser(else_g, parser, compiler,true,false,func_parser).getParsers());
                 }
                 case "while" -> {
                     ArrayList<Token> vars = new ArrayList<>(), groups = new ArrayList<>();
@@ -195,5 +226,42 @@ public class FunctionXParser {
         } catch (EOFException e) {
         }
         return bp;
+    }
+
+    private ElseIfParser getElseIf(Compiler c, Parser parser, FunctionParser fparser) throws EOFException {
+        ArrayList<Token> vars = new ArrayList<>(), groups = new ArrayList<>();
+
+        Token t = getToken();
+        if (!(t.getType() == Token.LP && t.getData().equals("(")))
+            throw new CompileException("'(' expected.", t, parser.filename);
+        t = getToken();
+        int index = 1;
+        do {
+            if (t.getType() == Token.LP && t.getData().equals("(")) {
+                vars.add(t);
+                index += 1;
+            }
+            if (t.getType() == Token.LR && t.getData().equals(")") && index > 0) {
+                index -= 1;
+                vars.add(t);
+            }
+            if (t.getType() == Token.LR && t.getData().equals(")") && index <= 0) break;
+
+            vars.add(t);
+            t = getToken();
+        } while (true);
+        t = getToken();
+        int i = 1;
+        if (!(t.getType() == Token.LP && t.getData().equals("{")))
+            throw new CompileException("Missing statement body.", t, parser.filename);
+        do {
+            t = getToken();
+            if (t.getType() == Token.LP && t.getData().equals("{")) i += 1;
+            if (t.getType() == Token.LR && t.getData().equals("}")) i -= 1;
+            if (i == 0) break;
+            groups.add(t);
+        } while (true);
+        ExpressionParsing e = new ExpressionParsing(vars, parser, c);
+        return new ElseIfParser(e.calculate(e.transitSuffix(fparser)),new Parser.SubParser(groups, parser, c, true, false, fparser).getParsers());
     }
 }
