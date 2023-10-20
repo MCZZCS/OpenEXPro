@@ -1,10 +1,12 @@
 package io.github.mczzcs;
 
+import io.github.mczzcs.exe.core.RuntimeShutdownHook;
+
 import java.util.HashSet;
 
 public class Main {
-    public static final String compile_version = "v0.1.0";
-    public static final String runtime_version = "v0.1.0";
+    public static final String version = "v0.1.2";
+    public static final String name = "OpenEX Pro";
 
     static HashSet<String> s = new HashSet<>();
     static {
@@ -29,6 +31,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new RuntimeShutdownHook());
         ConsoleModel.command(args);
     }
 }

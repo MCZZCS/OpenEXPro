@@ -14,6 +14,7 @@ import java.util.List;
 public class ConsoleModel {
     static ArrayList<String> filename = new ArrayList<>();
     static ScriptOutputStream output = new ScriptOutputStream();
+    public static boolean isStamonVM = false, isConsur = false, debug = false;
     public static void command(String[] args){
 
         try {
@@ -27,6 +28,8 @@ public class ConsoleModel {
                     acceptsAll(asList("h","help"),"Print help info about openex commands.");
                     acceptsAll(asList("c","compile"),"Enable StamonVM compilation mode.");
                     acceptsAll(asList("v","version"),"Print version info.");
+                    acceptsAll(asList("u","concur"),"Enable concurrent compilation mode.");
+                    acceptsAll(asList("d","debug"),"Enable debug mode.");
                 }
             };
 
@@ -36,10 +39,19 @@ public class ConsoleModel {
                 getOutput().info(getHelpInfo());
                 return;
             }
-            if (set.has("-help")) {
+            if (set.has("help")) {
                 getOutput().info(getHelpInfo());
                 return;
             }
+            if(set.has("version")) {
+                getOutput().info(Main.name+" "+Main.version);
+                return;
+            }
+
+            if(set.has("compile")) isStamonVM = true;
+            if(set.has("consur")) isConsur = true;
+            if(set.has("debug")) debug = true;
+
 
             if (!set.has("filename")) throw new CompileException("No has subcommand '-filename'", "<console>");
 
@@ -60,13 +72,15 @@ public class ConsoleModel {
 
     public static String getHelpInfo() {
         StringBuilder sb = new StringBuilder();
-        sb.append("OpenEX Pro ").append(Main.compile_version).append('\n');
+        sb.append(Main.name).append(' ').append(Main.version).append('\n');
         sb.append("Runtime: MSVC SubstrateVM").append('\n').append('\n');
         sb.append("Usage:\n");
         sb.append(Lang.buildSubCommand("-filename","<filename>","Compile the file(Please separate multiple file names with ',')"));
         sb.append(Lang.buildSubCommand("-compile","","Enable StamonVM compilation mode."));
+        sb.append(Lang.buildSubCommand("-concur","","Enable concurrent compilation mode."));
         sb.append(Lang.buildSubCommand("-help","","Print help info about openex commands."));
         sb.append(Lang.buildSubCommand("-version","","Print version info."));
+        sb.append(Lang.buildSubCommand("-debug","","Enable debug model."));
         return sb.toString();
     }
 }

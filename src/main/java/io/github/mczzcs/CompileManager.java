@@ -14,9 +14,20 @@ public class CompileManager {
     static ArrayList<Compiler> compilers = new ArrayList<>();
 
     public static void compile(ArrayList<String> files){
+        if(ConsoleModel.isConsur){
+            if(files.size() < 3){
+                ConsoleModel.isConsur = false;
+                ConsoleModel.output.debug("[Warn]: Too few files required to be compiled have been detected and concurrent compilation mode has been automatically turned off.");
+            }
+        }
+
+        ConsoleModel.output.debug("Initialing 'main' thread.");
         ThreadTask task = new ThreadTask("main");
         for(String s:files)compilers.add(new Compiler(s));
-        for(Compiler c:compilers)c.compile(task);
+        for(Compiler c:compilers){
+            c.compile(task);
+        }
+        ConsoleModel.getOutput().debug("Initialing openex runtime.");
         ThreadManager.addThread(task);
         ThreadManager.launch();
     }
