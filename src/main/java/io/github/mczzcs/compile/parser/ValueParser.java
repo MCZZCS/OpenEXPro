@@ -74,6 +74,7 @@ public class ValueParser implements BaseParser {
                             isend = false;
                             if (tds.size() == 0 && isf) {
                                 func_parser.pre_array_names.add(name.getData());
+                                func_parser.pre_value_names.add(name.getData());
                                 return new LoadArrayNode(name.getData(), new ArrayList<>(), 0, 0);
                             }
                             break;
@@ -86,6 +87,7 @@ public class ValueParser implements BaseParser {
                     isf = false;
                 } while (isend);
                 func_parser.pre_array_names.add(name.getData());
+                func_parser.pre_value_names.add(name.getData());
                 return new LoadArrayNode(name.getData(), b, 0, -1);
             } else {
                 ArrayList<Token> t = new ArrayList<>();

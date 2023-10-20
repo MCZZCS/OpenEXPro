@@ -28,6 +28,7 @@ public class InvokeParser implements BaseParser{
     }
     @Override
     public ASTNode eval(Parser parser, Compiler compiler,FunctionParser functionParser)throws CompileException {
+
         Token lib = null;
         Token function = null;
 
@@ -62,7 +63,7 @@ public class InvokeParser implements BaseParser{
                     if((td.getType()==Token.SEM && td.getData().equals(",")&&index <= 0)){
                         td = getTokens();
                         ExpressionParsing inble = new ExpressionParsing(tds,parser,compiler);
-                        values.add(new GroupASTNode(inble.calculate(inble.transitSuffix(null))));
+                        values.add(new GroupASTNode(inble.calculate(inble.transitSuffix(functionParser))));
                         tds.clear();
                         continue;
                     }
@@ -79,7 +80,7 @@ public class InvokeParser implements BaseParser{
                         }
 
                         ExpressionParsing inble = new ExpressionParsing(tds,parser,compiler);
-                        values.add(new GroupASTNode(inble.calculate(inble.transitSuffix(null))));
+                        values.add(new GroupASTNode(inble.calculate(inble.transitSuffix(functionParser))));
 
                         tds.clear();
                         break;

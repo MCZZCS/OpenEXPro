@@ -91,7 +91,7 @@ public class ExpressionParsing {
                             t.add(token);
                         }while (in > 0);
 
-                        suffixList.add(new TokenX(new GroupASTNode(new InvokeParser(t).eval(parser,compiler,null))));
+                        suffixList.add(new TokenX(new GroupASTNode(new InvokeParser(t).eval(parser,compiler,fparser))));
                     }
                     else if(compiler.array_names.contains(token.getData())||compiler.getValueNames().contains(token.getData())||pre_vars.contains(token.getData())){
                         Token name = token;
@@ -199,9 +199,6 @@ public class ExpressionParsing {
     }
 
     public ArrayList<ASTNode> calculate(ArrayList<Token> suffx){
-
-        String s = suffx.toString();
-
         ArrayList<ASTNode> bbc = new ArrayList<>();
         for (Token td : suffx) {
             if (td.getType() == Token.NAME) bbc.add(new MovVarNode(td.getData()));

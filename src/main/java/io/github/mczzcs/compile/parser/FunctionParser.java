@@ -74,7 +74,7 @@ public class FunctionParser implements BaseParser{
             bcs.add(bp.eval(parser,compiler,this));
         }
 
-        ThreadManager.getFunctions().add(new Function(parser.getFilename().split("\\.")[0],function_name,bcs));
+        ThreadManager.getFunctions().add(new Function(parser.getFilename().split("\\.")[0],function_name,bcs, parser.filename));
         return new NulASTNode();
     }
 }

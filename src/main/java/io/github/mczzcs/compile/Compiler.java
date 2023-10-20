@@ -1,6 +1,7 @@
 package io.github.mczzcs.compile;
 
 import io.github.mczzcs.CompileManager;
+import io.github.mczzcs.ConsoleModel;
 import io.github.mczzcs.exe.code.ASTNode;
 import io.github.mczzcs.exe.core.Script;
 import io.github.mczzcs.exe.thread.ThreadTask;
@@ -36,6 +37,7 @@ public class Compiler {
 
     public void compile(ThreadTask task) {
         try {
+            ConsoleModel.getOutput().debug("Lexing file '"+filename+"'");
             LexicalAnalysis al = new LexicalAnalysis(CompileManager.getFileData(filename), filename);
             ArrayList<Token> t = new ArrayList<>();
             for (Token b : al.getTokens()) {
@@ -43,12 +45,17 @@ public class Compiler {
                 t.add(b);
             }
 
+            ConsoleModel.getOutput().debug("Parsing file '"+filename+"'");
             Parser parser = new Parser(t, al.file_name);
 
-            while (true) {
-                BaseParser bp = parser.getParser(this);
-                if (bp == null) break;
-                bcs.add(bp.eval(parser, this,null));
+            try {
+                while (true) {
+                    BaseParser bp = parser.getParser(this);
+                    if (bp == null) break;
+                    bcs.add(bp.eval(parser, this, null));
+                }
+            }catch (NullPointerException e){
+                throw new CompileException("';' expected.",filename);
             }
 
 
