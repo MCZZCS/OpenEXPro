@@ -35,6 +35,6 @@ public class LoadArrayNode extends StructNode {
         } else array = new ExArray(name,objs);
 
 
-        executor.getExecuting().getValues().add(array);
+        executor.getThread().getCallStackPeek().getValues().add(array);
     }
 }

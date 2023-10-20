@@ -15,7 +15,7 @@ public class MovVarNode extends StructNode {
     @Override
     public void executor(Executor executor) throws VMRuntimeException {
         ExValue ex = null;
-        for(ExValue e:executor.getExecuting().getValues()){
+        for(ExValue e:executor.getThread().getCallStackPeek().getValues()){
             if(e.getData().equals(name)){
                 ex = e;
             }

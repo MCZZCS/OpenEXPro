@@ -25,7 +25,7 @@ public class ObjectSize {
                     break;
                 }
             }
-            for(ExValue v:executor.getExecuting().getValues()){
+            for(ExValue v:executor.getThread().getCallStackPeek().getValues()){
                 if(v.getData().equals(object.getData())){
                     buf = v;
                     break;

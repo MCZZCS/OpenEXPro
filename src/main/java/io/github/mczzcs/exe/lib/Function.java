@@ -8,12 +8,14 @@ import java.util.ArrayList;
 public class Function extends ExValue {
     String lib;
     String name;
+    String filename;
     ArrayList<ASTNode> bcs;
 
-    public Function(String lib, String name, ArrayList<ASTNode> bcs){
+    public Function(String lib, String name, ArrayList<ASTNode> bcs,String filename){
         this.lib = lib;
         this.name = name;
         this.bcs = bcs;
+        this.filename = filename;
     }
 
     public ArrayList<ASTNode> getBcs() {
@@ -28,4 +30,7 @@ public class Function extends ExValue {
         return lib;
     }
 
+    public String getFilename() {
+        return filename;
+    }
 }

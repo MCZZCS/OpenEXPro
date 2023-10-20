@@ -3,6 +3,7 @@ package io.github.mczzcs.exe.lib;
 import io.github.mczzcs.ConsoleModel;
 import io.github.mczzcs.Main;
 import io.github.mczzcs.exe.core.Executor;
+import io.github.mczzcs.exe.core.RuntimeShutdownHook;
 import io.github.mczzcs.exe.obj.*;
 import io.github.mczzcs.exe.thread.ThreadManager;
 import io.github.mczzcs.exe.thread.ThreadTask;
@@ -22,6 +23,23 @@ public class Sys implements RuntimeLibrary{
         rfs.add(new SysInfo());
         rfs.add(new Stop());
         rfs.add(new Sleep());
+
+        rfs.add(new RuntimeFunction() {
+            @Override
+            public int getVarNum() {
+                return 0;
+            }
+
+            @Override
+            public ExObject invoke(ArrayList<ExObject> vars, Executor executor) throws VMRuntimeException {
+                throw new VMRuntimeException("debug exception", executor.getThread());
+            }
+
+            @Override
+            public String getName() {
+                return "exception";
+            }
+        });
     }
     @Override
     public ArrayList<RuntimeFunction> functions() {
@@ -86,7 +104,8 @@ public class Sys implements RuntimeLibrary{
         public ExObject invoke(ArrayList<ExObject> vars, Executor executor) throws VMRuntimeException {
             ExObject o = vars.get(0);
             if(o.getType()!=ExObject.INTEGER)throw new VMRuntimeException("不兼容INT的类型,无法将未知类型输入进stop函数的参数",executor.getThread());
-            System.exit(Integer.parseInt(o.getData()));
+            RuntimeShutdownHook.exit_code = Integer.parseInt(o.getData());
+            System.exit(RuntimeShutdownHook.exit_code);
             return new ExNull();
         }
 

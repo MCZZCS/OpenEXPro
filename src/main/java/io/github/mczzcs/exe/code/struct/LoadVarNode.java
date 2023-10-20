@@ -21,11 +21,9 @@ public class LoadVarNode extends StructNode {
     public void executor(Executor executor) throws VMRuntimeException {
         for(ASTNode b:bcs)b.executor(executor);
 
-
-
         ExValue v = new ExValue(name,type);
         v.setVar(executor.pop());
-        executor.getExecuting().getValues().add(v);
+        executor.getThread().getCallStackPeek().getValues().add(v);
     }
 
     @Override

@@ -2,12 +2,17 @@ package io.github.mczzcs.exe.thread;
 
 import io.github.mczzcs.Main;
 import io.github.mczzcs.exe.core.Executor;
+import io.github.mczzcs.exe.core.LoaderStackFrame;
 import io.github.mczzcs.exe.core.Script;
+import io.github.mczzcs.exe.core.StackFrame;
 import io.github.mczzcs.exe.lib.Function;
+import io.github.mczzcs.exe.obj.ExObject;
 import io.github.mczzcs.util.VMRuntimeException;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;
+import java.util.Stack;
+
 public class ThreadTask {
     Executor executor;
     String name;
@@ -15,21 +20,22 @@ public class ThreadTask {
     ThreadManager.Status status;
     ArrayList<Script> scripts;
     Function function;
+    Stack<StackFrame> stackFrames;
+
     public ThreadTask(String name){
         this.name = name;
         this.scripts = new ArrayList<>();
+        this.stackFrames = new Stack<>();
         this.thread = new Thread(() ->{
             try{
+                stackFrames.push(new LoaderStackFrame(executor));
                 executor.launch();
             }catch (VMRuntimeException e){
                 status = ThreadManager.Status.ERROR;
                 e.printStackTrace();
             }catch (EmptyStackException e){
                 status = ThreadManager.Status.ERROR;
-                System.err.println("RuntimeError: OpStackError-Cause by ["+executor.getThread().name+"] thread\n\t" +
-                        "Filename: " +executor.getExecuting().getFilename()+"\n\t"+
-                        "Version:"+ Main.name + Main.version);
-                e.printStackTrace();
+                throw new VMRuntimeException("操作栈出栈异常", executor.getThread(), VMRuntimeException.EnumVMException.VM_OP_STACK_ERROR);
             }
         });
         this.thread.setName("OpenEX-Executor-"+name);
@@ -50,6 +56,23 @@ public class ThreadTask {
 
     public void addScripts(Script scripts) {
         this.scripts.add(scripts);
+    }
+
+    public StackFrame getCallStackPeek(){
+        return stackFrames.peek();
+    }
+
+    public Stack<StackFrame> getCallStack() {
+        return stackFrames;
+    }
+
+    public void pushCallStackFrame(StackFrame stackFrame){
+        stackFrame.getValues().addAll(this.stackFrames.peek().getValues());
+        this.stackFrames.push(stackFrame);
+    }
+
+    public void popCallStackFrame(){
+        this.stackFrames.pop();
     }
 
     public String getName() {

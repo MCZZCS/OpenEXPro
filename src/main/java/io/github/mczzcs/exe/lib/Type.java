@@ -49,7 +49,7 @@ public class Type implements RuntimeLibrary{
                         break;
                     }
                 }
-                for(ExValue v:executor.getExecuting().getValues()){
+                for(ExValue v:executor.getThread().getCallStackPeek().getValues()){
                     if(v.getData().equals(object.getData())){
                         buf = v;
                         break;

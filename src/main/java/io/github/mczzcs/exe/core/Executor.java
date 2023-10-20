@@ -12,18 +12,9 @@ import java.util.Stack;
 
 public class Executor {
 
-    Stack<ExObject> stack = new Stack<>();
     ArrayList<RuntimeLibrary> rls;
     ThreadTask thread;
     Script executing;
-
-    public List<ExObject> getStackList(){
-        return stack.stream().toList();
-    }
-
-    public String getStack() {
-        return stack.toString();
-    }
 
     public Script getExecuting() {
         return executing;
@@ -34,13 +25,13 @@ public class Executor {
     }
 
     public void push(ExObject obj){
-        stack.push(obj);
+        getThread().getCallStackPeek().push(obj);
     }
     public ExObject pop(){
-        return stack.pop();
+        return getThread().getCallStackPeek().pop();
     }
     public ExObject peek(){
-        return stack.peek();
+        return getThread().getCallStackPeek().pop();
     }
 
     public ArrayList<RuntimeLibrary> getLibrary() {
@@ -57,6 +48,5 @@ public class Executor {
         for(ASTNode bc: executing.bcs){
             bc.executor(this);
         }
-
     }
 }

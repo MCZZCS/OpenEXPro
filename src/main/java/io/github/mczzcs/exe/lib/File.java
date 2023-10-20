@@ -89,7 +89,7 @@ public class File implements RuntimeLibrary{
             }catch (FileNotFoundException e){
                 return new ExNull();
             }catch (IOException e){
-                throw new VMRuntimeException("[FILE]:读取文件时发生错误",executor.getThread());
+                throw new VMRuntimeException("[FILE]:读取文件时发生错误",executor.getThread(), VMRuntimeException.EnumVMException.FILE_IO_EXCEPTION);
             }
         }
 

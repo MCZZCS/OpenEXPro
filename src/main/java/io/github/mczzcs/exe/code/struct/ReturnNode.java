@@ -32,7 +32,7 @@ public class ReturnNode extends StructNode {
                     break;
                 }
             }
-            for(ExValue v:executor.getExecuting().getValues()){
+            for(ExValue v:executor.getThread().getCallStackPeek().getValues()){
                 if(v.getData().equals(o.getData())){
                     buf = v;
                     break;
