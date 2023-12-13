@@ -1,0 +1,27 @@
+need.lr.b=需要 '}'.
+need.lp.b=需要 '{'.
+need.lp.s=需要 '('.
+need.lr.s=需要 ')'.
+need.sem.marks=需要 '"'.
+need.sem.call=需要 '.'.
+miss.function.body=缺少函数体.
+miss.statement.body=缺少语句体.
+type.not.valid=类型名称无效.
+unable.resolve.symbols=无法解析符号.
+not.statement=不是语句.
+illegal.expression.start=非法的表达式开头.
+illegal.expression.comb=非法的表达式组合.
+illegal.string.escape=非法的转义字符.
+illegal.key=非法的关键字.
+outside.function.return=返回语句位于函数外部.
+outside.loop.back=退出语句位于循环外部.
+
+no.such.function=无法找到方法.
+
+command.help=打印命令行帮助信息.
+command.lang=选择输出语言
+command.file=运行一个或多个脚本(多个文件请用空格分开)
+command.version=打印当前版本
+command.compile=启用StamonVM编译模式
+command.debug=开启Debug模式
+command.concur=开启并发编译模式
