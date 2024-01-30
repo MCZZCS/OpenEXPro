@@ -17,7 +17,7 @@ import java.util.*;
 public class ExpressionParsing implements BaseParser {
     private static final Set<String> OP_DATA = Set.of("+", "-", "*", "/", ">=", "<=", "==", "!", "&",
             "|", "=", ">", "<", ",", "+=", "-=", "*=", "/=", "%", "%=",
-            "++", "--","&&","||");
+            "++", "--","&&","||","^");
     List<Token> tds;
     Parser parser;
     Compiler compiler;
@@ -194,11 +194,14 @@ public class ExpressionParsing implements BaseParser {
         if (op.getType() != Token.SEM) return -1;
 
         return switch (op.getData()) {
-            case "!", "++", "--" -> 7;
-            case "*", "/", "*=", "/=", "%", "%=" -> 6;
-            case "+", "-", "+=", "-=" -> 5;
-            case ">", ">=", "<=", "<" -> 4;
-            case "==" -> 3;
+            case "!", "++", "--" -> 10;
+            case "*", "/", "*=", "/=", "%", "%=" -> 9;
+            case "+", "-", "+=", "-=" -> 8;
+            case ">", ">=", "<=", "<" -> 7;
+            case "==" -> 6;
+            case "&" -> 5;
+            case "^" -> 4;
+            case "|" -> 3;
             case "&&", "||" -> 2;
             case "=" -> 1;
             case "," -> 0;
@@ -209,7 +212,6 @@ public class ExpressionParsing implements BaseParser {
     public List<ASTNode> calculate(List<Token> suffx) {
         List<ASTNode> bbc = new LinkedList<>();
 
-
         boolean co1 = true;
         for (Token token : suffx) {
             if (token.getType() == Token.NAME || token.getType() == Token.EXP) {
@@ -218,8 +220,10 @@ public class ExpressionParsing implements BaseParser {
             }
         }
         if (co1) {
+
             OptimizationExecutor executor = new OptimizationExecutor(suffx, parser);
             ASTNode node = executor.eval();
+
             if (node == null) {
                 ConsoleModel.getOutput().warn("Expression (line: " + suffx.get(0).line + ") cannot be evaluated in o1 mode.");
             } else return Collections.singletonList(node);
@@ -253,8 +257,8 @@ public class ExpressionParsing implements BaseParser {
                     case ">" -> bbc.add(new BigNode());
                     case "<" -> bbc.add(new LessNode());
                     case "!" -> bbc.add(new NotNode());
-                    //case "&" -> bbc.add(new AndNode());
-                   // case "|" -> bbc.add(new OrNode());
+                    case "&" -> bbc.add(new BitAndNode());
+                    case "|" -> bbc.add(new BitOrNode());
                     case "=" -> bbc.add(new MovNode());
                     case "+=" -> bbc.add(new AddMovNode());
                     case "-=" -> bbc.add(new SubMovNode());

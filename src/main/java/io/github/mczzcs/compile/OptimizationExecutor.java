@@ -7,6 +7,7 @@ import io.github.mczzcs.compile.code.struct.NulASTNode;
 import io.github.mczzcs.exe.lib.util.ObjectSize;
 import io.github.mczzcs.exe.obj.*;
 import io.github.mczzcs.util.CompileException;
+import io.github.mczzcs.util.VMRuntimeException;
 
 import java.util.Deque;
 import java.util.EmptyStackException;
@@ -69,12 +70,49 @@ public class OptimizationExecutor {
                     case "+=", "-=", "%=", "=" ->
                             throw new CompileException("Illegal combination of expressions.", token, parser.getFilename(), parser);
                     case "%" -> divx(token);
+                    case "&" -> bitand(token);
+                    case "|" -> bitor(token);
                 }
             }
 
             return new PushNode(op_stack.pop());
         }catch (EmptyStackException e){
             return null;
+        }
+    }
+
+    private void bitand(Token token){
+        ExObject t1 = op_stack.pop();
+        ExObject t2 = op_stack.pop();
+
+        t1 = ObjectSize.getValue(t1);
+        t2 = ObjectSize.getValue(t2);
+
+        if(t1.getType()==ExObject.STRING||t2.getType()==ExObject.STRING||t1.getType()==ExObject.BOOLEAN||t2.getType()==ExObject.BOOLEAN)throw new CompileException("The operation type is incorrect.",token, parser.getFilename(), parser);
+        else if(t1.getType()==ExObject.DOUBLE||t2.getType()==ExObject.DOUBLE){
+            throw new CompileException("Illegal combination of expressions.",token, parser.getFilename(), parser);
+        }
+        else if(t1.getType()==ExObject.NULL||t2.getType()==ExObject.NULL)throw new CompileException("Illegal combination of expressions.",token, parser.getFilename(), parser);
+        else{
+            op_stack.push(new ExInt(Integer.parseInt(t2.getData()) & Integer.parseInt(t1.getData())));
+        }
+    }
+
+    private void bitor(Token token){
+
+        ExObject t1 = op_stack.pop();
+        ExObject t2 = op_stack.pop();
+
+        t1 = ObjectSize.getValue(t1);
+        t2 = ObjectSize.getValue(t2);
+
+        if(t1.getType()==ExObject.STRING||t2.getType()==ExObject.STRING||t1.getType()==ExObject.BOOLEAN||t2.getType()==ExObject.BOOLEAN)throw new CompileException("The operation type is incorrect.",token, parser.getFilename(), parser);
+        else if(t1.getType()==ExObject.DOUBLE||t2.getType()==ExObject.DOUBLE){
+            throw new CompileException("Illegal combination of expressions.",token, parser.getFilename(), parser);
+        }
+        else if(t1.getType()==ExObject.NULL||t2.getType()==ExObject.NULL)throw new CompileException("Illegal combination of expressions.",token, parser.getFilename(), parser);
+        else{
+            op_stack.push(new ExInt(Integer.parseInt(t2.getData()) | Integer.parseInt(t1.getData())));
         }
     }
 
