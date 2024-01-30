@@ -1,6 +1,5 @@
 package io.github.mczzcs.compile;
 
-import io.github.mczzcs.compile.code.opcode.VNotNode;
 import io.github.mczzcs.compile.parser.Parser;
 import io.github.mczzcs.compile.code.ASTNode;
 import io.github.mczzcs.compile.code.opcode.PushNode;
@@ -8,7 +7,6 @@ import io.github.mczzcs.compile.code.struct.NulASTNode;
 import io.github.mczzcs.exe.lib.util.ObjectSize;
 import io.github.mczzcs.exe.obj.*;
 import io.github.mczzcs.util.CompileException;
-import io.github.mczzcs.util.VMRuntimeException;
 
 import java.util.Deque;
 import java.util.EmptyStackException;
@@ -21,7 +19,6 @@ public class OptimizationExecutor {
 
     Parser parser;
     public OptimizationExecutor(List<Token> suffix,Parser parser){
-
         this.suffix = suffix;
         this.op_stack = new LinkedList<>();
         this.parser = parser;
@@ -67,8 +64,8 @@ public class OptimizationExecutor {
                     case ">" -> big(token);
                     case "<" -> less(token);
                     case "!" -> not(token);
-                    case "&" -> and(token);
-                    case "|" -> or(token);
+                    case "&&" -> and(token);
+                    case "||" -> or(token);
                     case "+=", "-=", "%=", "=" ->
                             throw new CompileException("Illegal combination of expressions.", token, parser.getFilename(), parser);
                     case "%" -> divx(token);

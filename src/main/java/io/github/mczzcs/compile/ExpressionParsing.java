@@ -17,7 +17,7 @@ import java.util.*;
 public class ExpressionParsing implements BaseParser {
     private static final Set<String> OP_DATA = Set.of("+", "-", "*", "/", ">=", "<=", "==", "!", "&",
             "|", "=", ">", "<", ",", "+=", "-=", "*=", "/=", "%", "%=",
-            "++", "--");
+            "++", "--","&&","||");
     List<Token> tds;
     Parser parser;
     Compiler compiler;
@@ -199,7 +199,7 @@ public class ExpressionParsing implements BaseParser {
             case "+", "-", "+=", "-=" -> 5;
             case ">", ">=", "<=", "<" -> 4;
             case "==" -> 3;
-            case "&", "|" -> 2;
+            case "&&", "||" -> 2;
             case "=" -> 1;
             case "," -> 0;
             default -> -1;
@@ -253,14 +253,16 @@ public class ExpressionParsing implements BaseParser {
                     case ">" -> bbc.add(new BigNode());
                     case "<" -> bbc.add(new LessNode());
                     case "!" -> bbc.add(new NotNode());
-                    case "&" -> bbc.add(new AndNode());
-                    case "|" -> bbc.add(new OrNode());
+                    //case "&" -> bbc.add(new AndNode());
+                   // case "|" -> bbc.add(new OrNode());
                     case "=" -> bbc.add(new MovNode());
                     case "+=" -> bbc.add(new AddMovNode());
                     case "-=" -> bbc.add(new SubMovNode());
                     case "%" -> bbc.add(new DivXNode());
                     case "%=" -> bbc.add(new DivXMovNode());
                     case "++" -> bbc.add(new AddXNode());
+                    case "&&" -> bbc.add(new AndNode());
+                    case "||" -> bbc.add(new OrNode());
                 }
             } else if (td.getType() == Token.STRING) bbc.add(new PushNode(new ExString(td.getData())));
             else if (td.getType() == Token.EXP) bbc.add(((TokenX) td).getBc());

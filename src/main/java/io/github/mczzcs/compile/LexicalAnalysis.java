@@ -50,7 +50,7 @@ public final class LexicalAnalysis {
     }
 
     private boolean isSEM(int c) {
-        return (c == ':') || (c == '!') || (c == '.') || (c == ',') || (c == '%') || (c == '&') || (c == '|') || (c == '$');
+        return (c == ':') || (c == '!') || (c == '.') || (c == ',') || (c == '%') || (c == '$');
     }
 
     private Integer getChar() {
@@ -130,6 +130,20 @@ public final class LexicalAnalysis {
             }
             buf = (char) c;
             return new Token(Token.SEM, "*", file_line);
+        }else if(c == '&'){
+            c = getChar();
+            if (c == '&') {
+                return new Token(Token.SEM, "&&", file_line);
+            }
+            buf = (char) c;
+            return new Token(Token.SEM, "&", file_line);
+        }else if(c == '|'){
+            c = getChar();
+            if (c == '|') {
+                return new Token(Token.SEM, "||", file_line);
+            }
+            buf = (char) c;
+            return new Token(Token.SEM, "|", file_line);
         } else if (c == '"') {
             do {
                 c = getChar();
@@ -218,6 +232,7 @@ public final class LexicalAnalysis {
         } catch (NullPointerException e) {
             return tokens;
         }
+
         return tokens;
     }
 }

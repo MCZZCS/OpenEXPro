@@ -31,8 +31,6 @@ public class ValueParser implements BaseParser {
         this.tds = tds;
     }
 
-
-
     public ASTNode evalPreVar(Parser parser, Compiler compiler, Set<String> tos) {
         Token name;
         Token td = getTokens();
@@ -131,13 +129,8 @@ public class ValueParser implements BaseParser {
                 throw new CompileException("Unable to resolve symbols.", name, parser.filename,parser);
             td = getTokens();
 
-            if (td.getType() == Token.KEY) {
-                switch (td.getData()) {
-                    case "true" -> var_bc.add(new PushNode(new ExBool(true)));
-                    case "false" -> var_bc.add(new PushNode(new ExBool(false)));
-                    case "null" -> var_bc.add(new PushNode(new ExNull()));
-                    default -> throw new CompileException("Unable to resolve symbols.", td, parser.filename,parser);
-                }
+            if (td.getType() == Token.KEY && td.getData().equals("null")) {
+                var_bc.add(new PushNode(new ExNull()));
             } else if (td.getType() == Token.END) {
                 var_bc.add(new PushNode(new ExNull()));
             } else if (td.getType() == Token.LP) {
