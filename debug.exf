@@ -1,5 +1,5 @@
 include "system";
 
-value timer = 15 & 3;
+value timer = 15 ^ 3;
 
 system.print(timer);
