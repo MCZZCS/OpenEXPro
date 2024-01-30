@@ -260,6 +260,7 @@ public class ExpressionParsing implements BaseParser {
                     case "-=" -> bbc.add(new SubMovNode());
                     case "%" -> bbc.add(new DivXNode());
                     case "%=" -> bbc.add(new DivXMovNode());
+                    case "++" -> bbc.add(new AddXNode());
                 }
             } else if (td.getType() == Token.STRING) bbc.add(new PushNode(new ExString(td.getData())));
             else if (td.getType() == Token.EXP) bbc.add(((TokenX) td).getBc());

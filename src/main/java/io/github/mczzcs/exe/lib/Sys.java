@@ -23,6 +23,7 @@ public class Sys implements RuntimeLibrary{
         rfs.add(new SysInfo());
         rfs.add(new Stop());
         rfs.add(new Sleep());
+        rfs.add(new NanoTime());
     }
     @Override
     public ArrayList<RuntimeFunction> functions() {
@@ -31,6 +32,24 @@ public class Sys implements RuntimeLibrary{
     @Override
     public String getName() {
         return "system";
+    }
+
+    private static class NanoTime implements RuntimeFunction{
+
+        @Override
+        public int getVarNum() {
+            return 0;
+        }
+
+        @Override
+        public ExObject invoke(ArrayList<ExObject> vars, Executor executor) throws VMRuntimeException {
+            return new ExInt((int) System.nanoTime());
+        }
+
+        @Override
+        public String getName() {
+            return "nano_time";
+        }
     }
     private static class Print implements RuntimeFunction{
         @Override

@@ -44,7 +44,8 @@ public class CompileException extends RuntimeException{
                     "\n\tEdition: " + Main.name +
                     "\n\tVersion: " + Main.version);
         }
-        int line = token.getLine();
+
+        int line = token == null ? 0 : token.getLine();
         s.println("Location: ("+filename+": "+line+")");
         if(parser == null){
             s.println("\t<no_such_statement>");

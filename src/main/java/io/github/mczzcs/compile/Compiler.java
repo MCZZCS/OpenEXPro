@@ -61,6 +61,7 @@ public class Compiler {
                     bcs.add(bp.eval(parser, this, value_names));
                 }
             } catch (NullPointerException e) {
+                e.printStackTrace();
                 throw new CompileException("';' expected.", filename);
             }
 

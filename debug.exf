@@ -1,9 +1,3 @@
 include "system";
 
-system.print("Hello! World!");
-
-system.print("Hello! World!");
-
-system.print("Hello! World!");
-
-system.print("Hello! World!");
+value timer = true && false;
