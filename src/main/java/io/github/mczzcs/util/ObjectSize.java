@@ -1,4 +1,4 @@
-package io.github.mczzcs.exe.lib.util;
+package io.github.mczzcs.util;
 
 import io.github.mczzcs.exe.core.Executor;
 import io.github.mczzcs.exe.obj.ExArray;

@@ -1,7 +1,7 @@
 package io.github.mczzcs.compile.code.opcode;
 
 import io.github.mczzcs.exe.core.Executor;
-import io.github.mczzcs.exe.lib.util.ObjectSize;
+import io.github.mczzcs.util.ObjectSize;
 import io.github.mczzcs.exe.obj.ExObject;
 import io.github.mczzcs.exe.obj.ExValue;
 import io.github.mczzcs.util.VMRuntimeException;

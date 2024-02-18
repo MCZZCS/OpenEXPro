@@ -1,5 +1,5 @@
 include "system";
 
-value timer = 15 ^ 3;
-
-system.print(timer);
+for(value i=0;i<10;i++){
+    system.print(i);
+}

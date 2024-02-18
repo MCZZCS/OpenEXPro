@@ -4,10 +4,9 @@ import io.github.mczzcs.compile.parser.Parser;
 import io.github.mczzcs.compile.code.ASTNode;
 import io.github.mczzcs.compile.code.opcode.PushNode;
 import io.github.mczzcs.compile.code.struct.NulASTNode;
-import io.github.mczzcs.exe.lib.util.ObjectSize;
+import io.github.mczzcs.util.ObjectSize;
 import io.github.mczzcs.exe.obj.*;
 import io.github.mczzcs.util.CompileException;
-import io.github.mczzcs.util.VMRuntimeException;
 
 import java.util.Deque;
 import java.util.EmptyStackException;
