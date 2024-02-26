@@ -5,7 +5,7 @@ import io.github.mczzcs.exe.core.RuntimeShutdownHook;
 import java.util.HashSet;
 
 public class Main {
-    public static final String version = "v0.2.0"; //版本号
+    public static final String version = "v0.1.8"; //版本号
     public static final String name = "OpenEX Pro"; //版本号名
 
     static HashSet<String> s = new HashSet<>();

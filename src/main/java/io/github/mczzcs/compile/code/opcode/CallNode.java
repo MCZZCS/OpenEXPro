@@ -29,7 +29,7 @@ public class CallNode extends OpNode{
             throw new VMRuntimeException("Cannot invoke method.Because pointer is null.",executor.getThread(), VMRuntimeException.EnumVMException.NULL_PRINT_EXCEPTION);
         if(call_function.getType() != ExObject.METHOD)
             throw new VMRuntimeException("Cannot invoke method,Because not found method.",executor.getThread(), VMRuntimeException.EnumVMException.NO_SUCH_METHOD_EXCEPTION);
-        if(call_pointer.getType() == ExObject.ARRAY){
+        if(call_pointer.getType() == ExObject.ARRAY||call_pointer.getType() == ExObject.STRING){
             try{
                 ExMethod call_method = (ExMethod) call_function;
                 ExClass call_class = (ExClass) call_pointer;

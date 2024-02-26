@@ -3,4 +3,4 @@ include "system";
 value sys = system;
 value array = [true,false];
 
-sys.print(array[0]);
+sys.print("Hello!".toString());
