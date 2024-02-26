@@ -1,6 +1,7 @@
-package io.github.mczzcs.compile;
+package io.github.mczzcs.compile.tokens;
 
 import io.github.mczzcs.compile.code.struct.GroupASTNode;
+import io.github.mczzcs.compile.tokens.Token;
 
 public class TokenX extends Token {
     GroupASTNode bc;

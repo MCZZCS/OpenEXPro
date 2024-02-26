@@ -1,7 +1,7 @@
 package io.github.mczzcs.compile.parser;
 
 import io.github.mczzcs.ConsoleModel;
-import io.github.mczzcs.compile.Token;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.compile.code.ASTNode;
 import io.github.mczzcs.compile.code.struct.ExceptionASTNode;
 import io.github.mczzcs.compile.code.struct.GroupASTNode;

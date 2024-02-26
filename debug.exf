@@ -1,5 +1,6 @@
 include "system";
 
-for(value i=0;i<10;i++){
-    system.print(i);
-}
+value sys = system;
+value array = [true,false];
+
+sys.print(array[0]);

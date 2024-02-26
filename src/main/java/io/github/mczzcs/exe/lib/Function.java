@@ -4,6 +4,7 @@ import io.github.mczzcs.compile.code.ASTNode;
 import io.github.mczzcs.exe.obj.ExValue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Function extends ExValue {
     String lib;
@@ -16,6 +17,9 @@ public class Function extends ExValue {
         this.name = name;
         this.bcs = bcs;
         this.filename = filename;
+    }
+
+    public Function(String className, String methodName, List emptyList) {
     }
 
     public ArrayList<ASTNode> getBcs() {

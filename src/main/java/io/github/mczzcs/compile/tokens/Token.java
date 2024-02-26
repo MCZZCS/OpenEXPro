@@ -1,4 +1,4 @@
-package io.github.mczzcs.compile;
+package io.github.mczzcs.compile.tokens;
 
 public class Token {
     public static final int INTEGER = 0,
@@ -12,10 +12,12 @@ public class Token {
             LR = 8,
             LINE = 9,
             END = 10,
-            EXP = 11;
-    int type;
-    String data;
-    int line;
+            EXP = 11,
+            POINTER = 12,
+            CALL = 13;
+    public int type;
+    public String data;
+    public int line;
 
     public Token(){}
 

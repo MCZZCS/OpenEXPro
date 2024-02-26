@@ -7,8 +7,8 @@ import io.github.mczzcs.compile.code.struct.GroupASTNode;
 import io.github.mczzcs.compile.code.struct.InvokeASTNode;
 import io.github.mczzcs.compile.code.struct.MovVarNode;
 import io.github.mczzcs.compile.parser.BaseParser;
-import io.github.mczzcs.compile.parser.InvokeParser;
 import io.github.mczzcs.compile.parser.Parser;
+import io.github.mczzcs.compile.tokens.*;
 import io.github.mczzcs.exe.obj.*;
 import io.github.mczzcs.util.CompileException;
 
@@ -17,7 +17,7 @@ import java.util.*;
 public class ExpressionParsing implements BaseParser {
     private static final Set<String> OP_DATA = Set.of("+", "-", "*", "/", ">=", "<=", "==", "!", "&",
             "|", "=", ">", "<", ",", "+=", "-=", "*=", "/=", "%", "%=",
-            "++", "--","&&","||","^");
+            "++", "--", "&&", "||", "^", ".");
     List<Token> tds;
     Parser parser;
     Compiler compiler;
@@ -76,75 +76,156 @@ public class ExpressionParsing implements BaseParser {
                     isUnary = true;
                 } else if (isNumber(token)) {
                     if (isUnary) {
-                        isUnary = false; // 单目运算符标志位更新
+                        isUnary = false;
                     }
                     suffixList.add(token);
                 } else if (token.getType() == Token.KEY) {
                     if (isUnary) {
-                        isUnary = false; // 单目运算符标志位更新
+                        isUnary = false;
                     }
                     if (token.getData().equals("true") || token.getData().equals("false") || token.getData().equals("null"))
                         suffixList.add(token);
                     else throw new CompileException("Illegal keywords.", token, parser.getFilename(), parser);
-                } else if (token.getType() == Token.NAME) {
+                } else {
+                    Token name = token;
+                    if(compiler.getLibnames().contains(name.getData())){
+                        suffixList.add(new CallPointer(name));
+                        continue;
+                    }
+
+                    token = getToken(tds);
+                    if (token == null) {
+                        suffixList.add(name);
+                        break;
+                    }
+
+
+                    if (token.getType() == Token.LP && "[".equals(token.getData())) {
+                        int ibl = 1;
+                        List<Token> ts = new LinkedList<>();
+                        List<ASTNode> bcs = new LinkedList<>(), var = new LinkedList<>();
+                        do {
+                            token = getToken(tds);
+                            if (token.getType() == Token.LP && "[".equals(token.getData())) {
+                                ibl += 1;
+                            }
+                            if (token.getType() == Token.LR && "]".equals(token.getData())) {
+                                ibl -= 1;
+                            }
+                            if (ibl <= 0) {
+                                break;
+                            }
+                            ts.add(token);
+                        } while (true);
+                        ExpressionParsing ep = new ExpressionParsing(ts, parser,compiler);
+
+                        var.add(new MovVarNode(name.getData()));
+                        var.add(new GroupASTNode(ep.eval(parser, compiler, tos)));
+
+                        bcs.add(new InvokeASTNode("array", "get_object", var));
+
+                        suffixList.add(new TokenX(new GroupASTNode(bcs)));
+                    } else if (token.getType() == Token.LP && "(".equals(token.getData())) {
+                        token = getToken(tds);
+
+                        /*
+                        if(name.getType() != Token.NAME)
+                            throw new CompileException("Unable to resolve symbols.",token, parser.getFilename(), parser);
+                         */
+                        ArrayList<ASTNode> values = new ArrayList<>();
+
+                        try {
+                            do {
+                                ArrayList<Token> tds = new ArrayList<>();
+                                int index = 1;
+                                do {
+                                    if (token.getType() == Token.LP && "(".equals(token.getData())) {
+                                        tds.add(token);
+                                        index += 1;
+                                    }
+                                    if ((token.getType() == Token.SEM && ",".equals(token.getData()) && index <= 0)) {
+                                        token = getToken(ExpressionParsing.this.tds);
+                                        ExpressionParsing inble = new ExpressionParsing(tds, parser, compiler);
+                                        values.add(new GroupASTNode(inble.calculate(inble.transitSuffix(tos))));
+                                        tds.clear();
+                                        continue;
+                                    }
+                                    if (token.getType() == Token.LR && ")".equals(token.getData()) && index > 0) {
+                                        index -= 1;
+                                        tds.add(token);
+                                    }
+                                    if (token.getType() == Token.LR && ")".equals(token.getData()) && index <= 0) {
+
+                                        Token tdd = tds.get(0);
+                                        if (!(tdd.getType() == Token.LP && "(".equals(tdd.getData()))) {
+                                            tdd = tds.get(tds.size() - 1);
+                                            if (tdd.getType() == Token.LR && ")".equals(tdd.getData())) {
+                                                tds.remove(tds.size() - 1);
+                                            }
+                                        }
+
+                                        ExpressionParsing inble = new ExpressionParsing(tds, parser, compiler);
+                                        values.add(new GroupASTNode(inble.calculate(inble.transitSuffix(tos))));
+
+                                        tds.clear();
+                                        break;
+                                    }
+                                    tds.add(token);
+                                    token = getToken(ExpressionParsing.this.tds);
+                                } while (true);
+                            } while (!(token.getType() == Token.LR && ")".equals(token.getData())));
+                        } catch (IndexOutOfBoundsException ignored) {
+                            throw new CompileException("')' expected.", token, parser.getFilename(), parser);
+                        }
+                        Collections.reverse(values);
+
+                        suffixList.add(new CallBuffer(name, values));
+                    } else {
+                        buffer = token;
+                        suffixList.add(name);
+                    }
+                }
+
+                /*else if (token.getType() == Token.NAME) {
                     if (isUnary) {
                         isUnary = false; // 单目运算符标志位更新
                     }
-                    if (compiler.getLibnames().contains(token.getData())) {
-                        List<Token> t = new LinkedList<>();
-                        int in = 1;
-                        t.add(token);
-                        do {
-                            token = getToken(tds);
-                            if (token.getType() == Token.LP && token.getData().equals("(")) {
-                                t.add(token);
-                                break;
-                            }
-                            t.add(token);
-                        } while (true);
-                        do {
-                            token = getToken(tds);
-                            if (token.getType() == Token.LP && token.getData().equals("(")) in += 1;
-                            if (token.getType() == Token.LR && token.getData().equals(")")) in -= 1;
-                            t.add(token);
-                        } while (in > 0);
 
-                        suffixList.add(new TokenX(new GroupASTNode(new InvokeParser(t).eval(parser, compiler, tos))));
-                    } else if (compiler.array_names.contains(token.getData()) || compiler.getValueNames().contains(token.getData()) || tos.contains(token.getData())) {
-                        Token name = token;
-
-                        token = getToken(tds);
-                        if (token == null) {
-                            suffixList.add(name);
-                            break;
-                        }
-
-                        if (token.getType() == Token.LP && token.getData().equals("[")) {
-                            int ibl = 1;
-                            List<Token> ts = new LinkedList<>();
-                            List<ASTNode> bcs = new LinkedList<>(), var = new LinkedList<>();
-                            do {
-                                token = getToken(tds);
-                                if (token.getType() == Token.LP && token.getData().equals("[")) ibl += 1;
-                                if (token.getType() == Token.LR && token.getData().equals("]")) ibl -= 1;
-                                if (ibl <= 0) break;
-                                ts.add(token);
-                            } while (true);
-                            ExpressionParsing ep = new ExpressionParsing(ts, parser, compiler);
-
-                            var.add(new MovVarNode(name.data));
-                            var.add(new GroupASTNode(ep.calculate(ep.transitSuffix(tos))));
-
-                            bcs.add(new InvokeASTNode("array", "get_object", var));
-
-                            suffixList.add(new TokenX(new GroupASTNode(bcs)));
-                            continue;
-                        } else buffer = token;
-                        suffixList.add(name);
-                    } else if (token.getType() == Token.END) break;
-                    else {
-                        throw new CompileException("Unable to resolve symbols.", token, parser.getFilename(), parser);
+                    Token name = token;
+                    if (compiler.getLibnames().contains(name.getData())) {
+                        suffixList.add(new CallPointer(name));
+                        continue;
                     }
+                    if (token.getType() == Token.END) break;
+
+                    token = getToken(tds);
+                    if (token == null) {
+                        suffixList.add(name);
+                        break;
+                    }
+
+                    if (token.getType() == Token.LP && token.getData().equals("[")) {
+                        int ibl = 1;
+                        List<Token> ts = new LinkedList<>();
+                        List<ASTNode> bcs = new LinkedList<>(), var = new LinkedList<>();
+                        do {
+                            token = getToken(tds);
+                            if (token.getType() == Token.LP && token.getData().equals("[")) ibl += 1;
+                            if (token.getType() == Token.LR && token.getData().equals("]")) ibl -= 1;
+                            if (ibl <= 0) break;
+                            ts.add(token);
+                        } while (true);
+                        ExpressionParsing ep = new ExpressionParsing(ts, parser, compiler);
+
+                        var.add(new MovVarNode(name.data));
+                        var.add(new GroupASTNode(ep.calculate(ep.transitSuffix(tos))));
+
+                        bcs.add(new InvokeASTNode("array", "get_object", var));
+
+                        suffixList.add(new TokenX(new GroupASTNode(bcs)));
+                        continue;
+                    } else buffer = token;
+                    suffixList.add(name);
                 } else if ("(".equals(token.getData()) && token.getType() == Token.LP) {
                     op_stack.push(token);
                 } else if (")".equals(token.getData()) && token.getType() == Token.LR) {
@@ -158,8 +239,8 @@ public class ExpressionParsing implements BaseParser {
                     }
                 } else if (token.getType() == Token.END) break;
                 else throw new CompileException("Unable to resolve symbols.", token, parser.getFilename(), parser);
+                */
             } catch (NullPointerException e) {
-                e.printStackTrace();
                 throw new CompileException("Illegal combination of expressions.", parser.getFilename());
             }
         }
@@ -194,6 +275,7 @@ public class ExpressionParsing implements BaseParser {
         if (op.getType() != Token.SEM) return -1;
 
         return switch (op.getData()) {
+            case "." -> 11;
             case "!", "++", "--" -> 10;
             case "*", "/", "*=", "/=", "%", "%=" -> 9;
             case "+", "-", "+=", "-=" -> 8;
@@ -214,7 +296,10 @@ public class ExpressionParsing implements BaseParser {
 
         boolean co1 = true;
         for (Token token : suffx) {
-            if (token.getType() == Token.NAME || token.getType() == Token.EXP) {
+            if (token.getType() == Token.NAME ||
+                    token.getType() == Token.EXP ||
+                    token.getType() == Token.CALL ||
+                    token.getType() == Token.POINTER) {
                 co1 = false;
                 break;
             }
@@ -267,9 +352,21 @@ public class ExpressionParsing implements BaseParser {
                     case "++" -> bbc.add(new AddXNode());
                     case "&&" -> bbc.add(new AndNode());
                     case "||" -> bbc.add(new OrNode());
+                    case "." -> bbc.add(new CallNode());
                 }
             } else if (td.getType() == Token.STRING) bbc.add(new PushNode(new ExString(td.getData())));
             else if (td.getType() == Token.EXP) bbc.add(((TokenX) td).getBc());
+            else if(td.getType() == Token.CALL){
+                CallBuffer cb = (CallBuffer) td;
+                bbc.add(new PushNode(new ExMethod(cb.getMethodName().getData(),new GroupASTNode(new LinkedList<>(){
+                    {
+                        addAll( cb.getArgsParser());
+                    }
+                }))));
+            } else if(td.getType() == Token.POINTER){
+                CallPointer spb = (CallPointer) td;
+                bbc.add(new PushNode(new ExClass(spb.getName().getData())));
+            }
         }
 
         return bbc;

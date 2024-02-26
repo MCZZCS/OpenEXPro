@@ -9,6 +9,4 @@ public class PrintNodeStruct {
     public PrintNodeStruct(List<ASTNode> nodes){
         this.nodes = nodes;
     }
-
-
 }

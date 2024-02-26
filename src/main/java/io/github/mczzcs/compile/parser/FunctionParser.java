@@ -6,7 +6,7 @@ import io.github.mczzcs.compile.code.struct.NulASTNode;
 import io.github.mczzcs.exe.lib.Function;
 import io.github.mczzcs.exe.thread.ThreadManager;
 import io.github.mczzcs.compile.Compiler;
-import io.github.mczzcs.compile.Token;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.util.CompileException;
 
 import java.util.*;

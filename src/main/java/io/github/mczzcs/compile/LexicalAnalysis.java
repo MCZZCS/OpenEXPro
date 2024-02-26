@@ -1,6 +1,7 @@
 package io.github.mczzcs.compile;
 
 import io.github.mczzcs.Main;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.util.CompileException;
 
 import java.util.ArrayList;

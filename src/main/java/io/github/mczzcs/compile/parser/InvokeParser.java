@@ -4,7 +4,7 @@ import io.github.mczzcs.compile.code.ASTNode;
 import io.github.mczzcs.compile.code.struct.GroupASTNode;
 import io.github.mczzcs.compile.code.struct.InvokeASTNode;
 import io.github.mczzcs.compile.Compiler;
-import io.github.mczzcs.compile.Token;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.compile.ExpressionParsing;
 import io.github.mczzcs.util.CompileException;
 

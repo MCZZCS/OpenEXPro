@@ -3,7 +3,7 @@ package io.github.mczzcs.compile.parser;
 import io.github.mczzcs.compile.code.ASTNode;
 import io.github.mczzcs.compile.code.struct.NulASTNode;
 import io.github.mczzcs.compile.Compiler;
-import io.github.mczzcs.compile.Token;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.util.CompileException;
 
 import java.util.List;

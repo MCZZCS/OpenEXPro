@@ -1,25 +1,39 @@
 package io.github.mczzcs.exe.obj;
 
+import io.github.mczzcs.exe.lib.RuntimeClass;
+import io.github.mczzcs.exe.lib.RuntimeMethod;
+import io.github.mczzcs.exe.lib.util.Length;
 import io.github.mczzcs.util.VMRuntimeException;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ExArray extends ExValue{
+public class ExArray extends RuntimeClass {
     String name;
     ExValue[] objs;
+    List<RuntimeMethod> methods;
 
     public ExArray(String name,int size){
+        super("array");
         this.name = name;
         this.objs = new ExValue[size];
+        this.methods = new ArrayList<>();
+        this.methods.add(new Length(this));
     }
     public ExArray(String name, List<ExObject> objs){
+        super("array");
         this.name = name;
         this.objs = new ExValue[objs.size()];
         for (int i = 0; i < this.objs.length; i++) this.objs[i] = new ExValue(objs.get(i));
+        this.methods = new ArrayList<>();
+        this.methods.add(new Length(this));
     }
     public ExArray(String name,ExObject[] objs){
+        super("array");
         this.name = name;
         for (int i = 0; i < this.objs.length; i++) this.objs[i] = new ExValue(objs[i]);
+        this.methods = new ArrayList<>();
+        this.methods.add(new Length(this));
     }
 
     public void setObj(int index,ExObject obj){
@@ -39,7 +53,6 @@ public class ExArray extends ExValue{
         return obj;
     }
 
-    @Override
     public ExObject getVar() {
         return this;
     }
@@ -65,5 +78,10 @@ public class ExArray extends ExValue{
     @Override
     public int getType() {
         return ExObject.ARRAY;
+    }
+
+    @Override
+    public List<RuntimeMethod> getMethods() {
+        return methods;
     }
 }

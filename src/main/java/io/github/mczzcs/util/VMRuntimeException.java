@@ -76,6 +76,9 @@ public class VMRuntimeException extends RuntimeException{
         ILLEGAL_STATE_EXCEPTION(true),
         FILE_IO_EXCEPTION(true),
         NO_SUCH_FUNCTION_EXCEPTION(true),
+        NO_SUCH_METHOD_EXCEPTION(true),
+        NO_CLASS_DEF_FOUND_EXCEPTION(true),
+        NOT_FOUND_CLASS_EXCEPTION(true),
         TYPE_CAST_EXCEPTION(true),
         NO_SUCH_VALUE_ERROR(false),
         STACK_OVER_FLOW_ERROR(false);

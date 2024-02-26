@@ -1,6 +1,8 @@
-package io.github.mczzcs.compile;
+package io.github.mczzcs.compile.tokens;
 
-public class UToken extends Token{
+import io.github.mczzcs.compile.tokens.Token;
+
+public class UToken extends Token {
     Token token;
     public UToken(Token token) {
        this.token = token;

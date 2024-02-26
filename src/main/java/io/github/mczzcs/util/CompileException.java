@@ -2,7 +2,7 @@ package io.github.mczzcs.util;
 
 import io.github.mczzcs.ConsoleModel;
 import io.github.mczzcs.Main;
-import io.github.mczzcs.compile.Token;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.compile.parser.Parser;
 
 import java.io.PrintStream;

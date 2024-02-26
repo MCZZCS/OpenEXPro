@@ -7,7 +7,7 @@ import io.github.mczzcs.compile.code.struct.LoadArrayNode;
 import io.github.mczzcs.compile.code.struct.LoadVarNode;
 import io.github.mczzcs.exe.obj.ExBool;
 import io.github.mczzcs.exe.obj.ExNull;
-import io.github.mczzcs.compile.Token;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.compile.ExpressionParsing;
 import io.github.mczzcs.util.CompileException;
 import io.github.mczzcs.compile.Compiler;

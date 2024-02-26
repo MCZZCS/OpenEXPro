@@ -7,6 +7,7 @@ import io.github.mczzcs.compile.parser.Parser;
 import io.github.mczzcs.compile.code.ASTNode;
 import io.github.mczzcs.compile.code.struct.NulASTNode;
 import io.github.mczzcs.compile.stamon.StamonByteCodeFile;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.exe.core.Script;
 import io.github.mczzcs.exe.thread.ThreadTask;
 import io.github.mczzcs.util.CompileException;

@@ -2,7 +2,7 @@ package io.github.mczzcs.compile.parser;
 
 import io.github.mczzcs.compile.Compiler;
 import io.github.mczzcs.compile.ExpressionParsing;
-import io.github.mczzcs.compile.Token;
+import io.github.mczzcs.compile.tokens.Token;
 import io.github.mczzcs.util.CompileException;
 
 import java.io.EOFException;
