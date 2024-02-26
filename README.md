@@ -2,6 +2,9 @@
 
 基于幻梦互联的JavaPlus分支版本
 
+> main分支为面向过程语法 \
+> oop分支为面向对象语法
+
 <hr>
 
 ## Document
